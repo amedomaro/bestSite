@@ -18,8 +18,8 @@ public class Overview extends BaseEntity{
     @Column(name = "rating")
     private int rating;
 
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "user_id")
-//    private User author;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User author;
 
 }
