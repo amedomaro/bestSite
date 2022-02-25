@@ -11,7 +11,7 @@
     <h1>Overview</h1>
     <div th:each="el: ${overviews}" class="alert alert-info mt-3">
         <h3 th:text="${el.title}"/>
-        <a th:ref="'/overviews/' + ${el.id}">detail</a>
+        <a th:href="'/overview/' + ${el.id}">detail...</a>
     </div>
 </div>
 </body>
