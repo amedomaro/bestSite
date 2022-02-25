@@ -24,6 +24,10 @@ public class User extends BaseEntity {
     @Column(name = "password")
     private String password;
 
+    @Enumerated(EnumType.STRING)
+    @Column (name = "status")
+    private Status status;
+
     private String role = "USER";
 
     public boolean isAccountNonLocked(User user) {
@@ -35,4 +39,8 @@ public class User extends BaseEntity {
             joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles;
+
+//    @OneToMany( cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+//    @JoinColumn(name = "user_id")
+//    private List<Overview> overviews;
 }
