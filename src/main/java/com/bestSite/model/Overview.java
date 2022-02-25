@@ -1,7 +1,6 @@
 package com.bestSite.model;
 
 import lombok.Data;
-
 import javax.persistence.*;
 
 @Entity
@@ -18,8 +17,15 @@ public class Overview extends BaseEntity{
     @Column(name = "rating")
     private int rating;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
-    private User author;
+//    @ManyToOne(fetch = FetchType.EAGER)
+//    @JoinColumn(name = "user_id")
+//    private User author;
 
+    public Overview(){
+    }
+
+    public Overview(String title, String text) {
+        this.title = title;
+        this.text = text;
+    }
 }
