@@ -3,7 +3,6 @@ package com.bestSite.model;
 import lombok.Data;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
-
 import javax.persistence.*;
 import java.util.List;
 
@@ -28,13 +27,13 @@ public class User extends BaseEntity {
     private String password;
 
     @Enumerated(EnumType.STRING)
-    @Column (name = "status")
+    @Column(name = "status")
     private Status status;
 
     private String role = "USER";
 
     public boolean isAccountNonLocked(User user) {
-        return  user.getStatus().equals(Status.ACTIVE);
+        return user.getStatus().equals(Status.ACTIVE);
     }
 
     @ManyToMany(fetch = FetchType.EAGER)
@@ -43,8 +42,8 @@ public class User extends BaseEntity {
             inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
     private List<Role> roles;
 
-    @OneToMany( cascade = CascadeType.ALL)
-    @LazyCollection(LazyCollectionOption.FALSE)
-    @JoinColumn(name = "user_id")
-    private List<Overview> overviews;
+//    @OneToMany( cascade = CascadeType.ALL)
+//    @LazyCollection(LazyCollectionOption.FALSE)
+//    @JoinColumn(name = "user_id")
+//    private List<Overview> overviews;
 }
