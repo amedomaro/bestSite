@@ -39,6 +39,7 @@ public class UserController {
     public String showUsers(Model model) {
         Iterable<User> user = userRepository.findAll();
         model.addAttribute("user", user);
+        model.addAttribute("title", "All users");
         return "allUsers";
     }
 
