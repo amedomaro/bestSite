@@ -61,6 +61,13 @@ public class OverviewController {
         return "redirect:/overview";
     }
 
+    @PostMapping("/overview/{id}/delete")
+    public String overviewDelete(@PathVariable(name = "id") long id, Model model) {
+        Overview overview = overviewRepository.findById(id).orElseThrow();
+        overviewRepository.delete(overview);
+        return "redirect:/overview";
+    }
+
     private boolean receiveData(@PathVariable(name = "id") long id, Model model) {
         if (!overviewRepository.existsById(id)) return true;             // check for ID
         Optional<Overview> overview = overviewRepository.findById(id);
