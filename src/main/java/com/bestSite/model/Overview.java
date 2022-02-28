@@ -11,8 +11,14 @@ public class Overview extends BaseEntity{
     @Column(name = "title")
     private String title;
 
-    @Column(name = "text")
+    @Column(columnDefinition = "TEXT", name = "description")
+    private String description;
+
+    @Column(columnDefinition = "TEXT", name = "text")
     private String text;
+
+    @Column(name = "image")
+    private String image = "https://mdbootstrap.com/img/Photos/Others/img%20(28).jpg";
 
     @Column(name = "rating")
     private int rating;
@@ -24,8 +30,10 @@ public class Overview extends BaseEntity{
     public Overview(){
     }
 
-    public Overview(String title, String text) {
+    public Overview(String title, String image, String description, String text ) {
         this.title = title;
+        this.image = image;
+        this.description = description;
         this.text = text;
     }
 }

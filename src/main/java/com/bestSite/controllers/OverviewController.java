@@ -34,8 +34,9 @@ public class OverviewController {
     }
 
     @PostMapping("/overview/add")
-    public String addPostOverview(@RequestParam String title, @RequestParam String text) {
-        Overview overview = new Overview(title, text);
+    public String addPostOverview(@RequestParam String title, @RequestParam String image,
+                                  @RequestParam String description, @RequestParam String text) {
+        Overview overview = new Overview(title, image, description, text);
         overviewRepository.save(overview);
         return "redirect:/overview";
     }
@@ -53,9 +54,12 @@ public class OverviewController {
     }
 
     @PostMapping("/overview/{id}/edit")
-    public String overviewUpdate(@PathVariable(name = "id") long id, @RequestParam String title, @RequestParam String text, Model model) {
+    public String overviewUpdate(@PathVariable(name = "id") long id, @RequestParam String title, @RequestParam String image,
+                                 @RequestParam String description, @RequestParam String text) {
         Overview overview = overviewRepository.findById(id).orElseThrow();
         overview.setTitle(title);
+        overview.setImage(image);
+        overview.setDescription(description);
         overview.setText(text);
         overviewRepository.save(overview);
         return "redirect:/overview";
