@@ -30,7 +30,7 @@ public class OverviewController {
     @GetMapping("/overview/add")
     public String addOverview(Model model) {
         model.addAttribute("title", "new review");
-        return "overviewAdd";
+        return "overview-add";
     }
 
     @PostMapping("/overview/add")
@@ -42,11 +42,31 @@ public class OverviewController {
 
     @GetMapping("/overview/{id}")
     public String showDetail(@PathVariable(name = "id") long id, Model model) {
-        if(!overviewRepository.existsById(id)) return "redirect:/overview";  // check for ID
+        if (receiveData(id, model)) return "redirect:/overview";
+        return "overview-detail";
+    }
+
+    @GetMapping("/overview/{id}/edit")
+    public String edit(@PathVariable(name = "id") long id, Model model) {
+        if (receiveData(id, model)) return "redirect:/overview";
+        return "overview-edit";
+    }
+
+    @PostMapping("/overview/{id}/edit")
+    public String overviewUpdate(@PathVariable(name = "id") long id, @RequestParam String title, @RequestParam String text, Model model) {
+        Overview overview = overviewRepository.findById(id).orElseThrow();
+        overview.setTitle(title);
+        overview.setText(text);
+        overviewRepository.save(overview);
+        return "redirect:/overview";
+    }
+
+    private boolean receiveData(@PathVariable(name = "id") long id, Model model) {
+        if (!overviewRepository.existsById(id)) return true;             // check for ID
         Optional<Overview> overview = overviewRepository.findById(id);
         ArrayList<Overview> result = new ArrayList<>();
-        overview.ifPresent(result :: add);
+        overview.ifPresent(result::add);
         model.addAttribute("post", result);
-        return "overviewDetail";
+        return false;
     }
 }
