@@ -11,6 +11,7 @@ import org.springframework.security.web.authentication.logout.SecurityContextLog
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -74,7 +75,7 @@ public class UserController {
             userRepository.save(user);
             if (user.getUsername().equals(auth.getName())) isFlag = true;
         }
-        if (isFlag){
+        if (isFlag) {
             new SecurityContextLogoutHandler().logout(httpServletRequest, httpServletResponse, auth);
             return "redirect:/login";
         }
@@ -108,12 +109,6 @@ public class UserController {
 //        return "redirect:/allUsers";
 //    }
 //
-//    @GetMapping("/users/delete/{id}")
-//    public String delete(@PathVariable(value = "id") Long id) {
-//        user = userRepository.findById(id).orElseThrow();
-//        userRepository.delete(user);
-//        return "redirect:/allUsers";
-//    }
 //
 //    @RequestMapping(value = "/users/blocked/{id}", method = RequestMethod.GET)
 //    public String logoutPage(HttpServletRequest request, HttpServletResponse response,
@@ -134,6 +129,13 @@ public class UserController {
 //        user = userRepository.findById(id).orElseThrow();
 //        user.setStatus(user.getStatus().equals(Status.BLOCKED) ? Status.ACTIVE : Status.BLOCKED);
 //        userRepository.save(user);
+//        return "redirect:/allUsers";
+//    }
+//
+//    @GetMapping("/users/delete/{id}")
+//    public String delete(@PathVariable(value = "id") Long id) {
+//        user = userRepository.findById(id).orElseThrow();
+//        userRepository.delete(user);
 //        return "redirect:/allUsers";
 //    }
 }
