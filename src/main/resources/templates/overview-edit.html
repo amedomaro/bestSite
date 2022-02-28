@@ -15,17 +15,25 @@
                 <h3 class="font-weight-bold">Edit review</h3>
                 <hr class="my-5">
                 <div class="row">
-
+                    <!--Title-->
                     <div class="md-form md-outline mt-3">
-                        <input type="text" th:value="${el.title}" name="title" placeholder="Enter review title"
-                               class="form-control"><br>
+                        <input type="text" th:value="${el.title}" name="title" class="form-control">
+                        <p>Title</p>
                     </div>
-                    <!--div class="md-form md-outline mt-3">
-                        <textarea name="description" placeholder="Enter short description"
-                                  class="form-control"></textarea><br>
-                    </div-->
+                    <!--Image-->
+                    <div class="md-form md-outline mt-3">
+                        <input type="text" th:value="${el.image}" name="image" class="form-control">
+                        <p>Image</p>
+                    </div>
+                    <!--description-->
+                    <div class="md-form md-outline mt-3">
+                        <textarea name="description" class="form-control" th:text="${el.description}"></textarea>
+                        <p>Description</p>
+                    </div>
+                    <!--Text-->
                     <div class="md-form md-outline mb-3">
-                        <textarea name="text" class="form-control" th:text="${el.text}"></textarea><br>
+                        <textarea name="text" class="form-control" th:text="${el.text}"></textarea>
+                        <p>Full text</p>
                     </div>
                     <button type="submit" class="btn btn-secondary">Edit<i class="far fa-paper-plane ml-2"></i></button>
                 </div>
