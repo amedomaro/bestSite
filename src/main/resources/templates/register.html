@@ -48,7 +48,7 @@
                     <input type="password" id="repeatPassword" th:field="${user.repeatPassword}" class="form-control" placeholder="Repeat password">
                     <small class="form-text text-danger" th:each="err:${#fields.errors('repeatPassword')}">Validation error</small>
                 </div>
-                <button type="submit" class="btn btn-primary">Register</button>
+                <button type="submit" class="btn btn-secondary">Register</button>
                 <a class="px-3" th:href="@{/login}">Login</a>
             </form>
         </div>
