@@ -12,8 +12,8 @@
     <div th:each="el: ${post}" class="alert alert-secondary mt-3">
         <h3 th:text="${el.title}"></h3>
         <p th:text="${el.text}"></p>
-        <a th:href="'/overview/edit' + ${el.id}">edit</a>
-        <a th:href="'/overview/delete' + ${el.id}">delete</a>
+        <a th:href="'/overview/' + ${el.id} + '/edit'">edit</a>
+        <a th:href="'/overview/' + ${el.id} + '/delete'">delete</a>
     </div>
 </div>
 </body>
