@@ -6,8 +6,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+
+import java.util.ArrayList;
+import java.util.Optional;
 
 @Controller
 public class OverviewController {
@@ -34,5 +38,15 @@ public class OverviewController {
         Overview overview = new Overview(title, text);
         overviewRepository.save(overview);
         return "redirect:/overview";
+    }
+
+    @GetMapping("/overview/{id}")
+    public String showDetail(@PathVariable(name = "id") long id, Model model) {
+        if(!overviewRepository.existsById(id)) return "redirect:/overview";  // check for ID
+        Optional<Overview> overview = overviewRepository.findById(id);
+        ArrayList<Overview> result = new ArrayList<>();
+        overview.ifPresent(result :: add);
+        model.addAttribute("post", result);
+        return "overviewDetail";
     }
 }
