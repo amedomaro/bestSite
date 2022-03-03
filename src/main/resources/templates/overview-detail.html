@@ -9,7 +9,7 @@
 <header th:insert="blocks/header :: header"></header>
 
 <div class="container my-5 py-5 z-depth-1">
-    <div th:each=" el: ${post}">
+    <div th:each=" el: ${overview}">
 
         <section class="px-md-5 mx-md-5 text-center text-lg-left dark-grey-text">
             <h3 th:text="${el.title}" class="font-weight-bold"></h3>
@@ -45,7 +45,8 @@
                 </form>
             </div>
         </section>
-
+        <!--Comments-->
+        <comment th:insert="blocks/comment :: comment"></comment>
     </div>
 </div>
 </body>
