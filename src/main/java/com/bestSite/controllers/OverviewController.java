@@ -1,8 +1,14 @@
 package com.bestSite.controllers;
 
+import com.bestSite.model.Comment;
 import com.bestSite.model.Overview;
+import com.bestSite.model.User;
+import com.bestSite.repository.CommentRepository;
 import com.bestSite.repository.OverviewRepository;
+import com.bestSite.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,8 +22,17 @@ import java.util.Optional;
 @Controller
 public class OverviewController {
 
+    private final OverviewRepository overviewRepository;
+    private final UserRepository userRepository;
+    private final CommentRepository commentRepository;
+
     @Autowired
-    private OverviewRepository overviewRepository;
+    public OverviewController(OverviewRepository overviewRepository, UserRepository userRepository,
+                              CommentRepository commentRepository) {
+        this.overviewRepository = overviewRepository;
+        this.userRepository = userRepository;
+        this.commentRepository = commentRepository;
+    }
 
     @GetMapping("/overview")
     public String showOverviewPage(Model model) {
@@ -41,16 +56,28 @@ public class OverviewController {
         return "redirect:/overview";
     }
 
-    @GetMapping("/overview/{id}")
-    public String showDetail(@PathVariable(name = "id") long id, Model model) {
-        if (receiveData(id, model)) return "redirect:/overview";
-        return "overview-detail";
+    @PostMapping("/overview/{id}")
+    public String addComment(@PathVariable(value = "id") long id,
+                             @RequestParam(name = "textComment") String text, Model model) {
+        Overview overview = overviewRepository.findById(id).orElseThrow();
+        User user = userRepository.findByUsername(getCurrentUser().getName()).orElseThrow();
+        Comment comment = new Comment(text, overview, user);
+        commentRepository.save(comment);
+        return "redirect:/overview/{id}";
     }
 
     @GetMapping("/overview/{id}/edit")
     public String edit(@PathVariable(name = "id") long id, Model model) {
         if (receiveData(id, model)) return "redirect:/overview";
         return "overview-edit";
+    }
+
+    @GetMapping("/overview/{id}")
+    public String showDetail(@PathVariable(name = "id") long id, Model model) {
+        if (receiveData(id, model)) return "redirect:/overview";
+        Iterable<Comment> comments = commentRepository.findByOverview(overviewRepository.findById(id).orElseThrow());
+        model.addAttribute("comments", comments);
+        return "overview-detail";
     }
 
     @PostMapping("/overview/{id}/edit")
@@ -77,7 +104,11 @@ public class OverviewController {
         Optional<Overview> overview = overviewRepository.findById(id);
         ArrayList<Overview> result = new ArrayList<>();
         overview.ifPresent(result::add);
-        model.addAttribute("post", result);
+        model.addAttribute("overview", result);
         return false;
+    }
+
+    private Authentication getCurrentUser() {
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 }
