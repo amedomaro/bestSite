@@ -66,18 +66,18 @@ public class OverviewController {
         return "redirect:/overview/{id}";
     }
 
-    @GetMapping("/overview/{id}/edit")
-    public String edit(@PathVariable(name = "id") long id, Model model) {
-        if (receiveData(id, model)) return "redirect:/overview";
-        return "overview-edit";
-    }
-
     @GetMapping("/overview/{id}")
     public String showDetail(@PathVariable(name = "id") long id, Model model) {
         if (receiveData(id, model)) return "redirect:/overview";
         Iterable<Comment> comments = commentRepository.findByOverview(overviewRepository.findById(id).orElseThrow());
         model.addAttribute("comments", comments);
         return "overview-detail";
+    }
+
+    @GetMapping("/overview/{id}/edit")
+    public String edit(@PathVariable(name = "id") long id, Model model) {
+        if (receiveData(id, model)) return "redirect:/overview";
+        return "overview-edit";
     }
 
     @PostMapping("/overview/{id}/edit")
