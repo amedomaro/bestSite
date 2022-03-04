@@ -1,0 +1,73 @@
+<div th:fragment="comment">
+    <section style="background-color: #FFFFFF;">
+        <div class="container my-5 py-5">
+            <div class="row d-flex justify-content-center">
+                <div class="col-md-12 col-lg-10 col-xl-8">
+                    <div class="card">
+                        <div class="card-body" th:each="el:${comments}"> <!--th:each="el:${comments}"-->
+                            <!-- Avatar -->
+                            <div class="d-flex flex-start align-items-center">
+                                <img
+                                        class="rounded-circle shadow-1-strong me-3"
+                                        src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp"
+                                        alt="avatar"
+                                        width="60"
+                                        height="60"
+                                />
+                                <!-- User name -->
+                                <div>
+                                    <h6 class="fw-bold text-primary mb-1">[[${el.author.username}]]</h6>
+                                </div>
+                            </div>
+                            <!-- message -->
+                            <p class="mt-3 mb-4 pb-2">
+                                [[${el.message}]]
+                            </p>
+
+                            <!--div class="small d-flex justify-content-start">
+                                <a href="#!" class="d-flex align-items-center me-3">
+                                    <i class="far fa-thumbs-up me-2"></i>
+                                    <p class="mb-0">Like</p>
+                                </a>
+                                <a href="#!" class="d-flex align-items-center me-3">
+                                    <i class="far fa-comment-dots me-2"></i>
+                                    <p class="mb-0">Comment</p>
+                                </a>
+                                <a href="#!" class="d-flex align-items-center me-3">
+                                    <i class="fas fa-share me-2"></i>
+                                    <p class="mb-0">Share</p>
+                                </a>
+                            </div-->
+                        </div>
+                        <form th:objact="overview" th:action="@{/overview/{id}(id=${id})}" method="post">
+                            <div class="card-footer py-3 border-0" style="background-color: #f8f9fa;">
+                                <!-- Avatar -->
+                                <div class="d-flex flex-start w-100">
+                                    <img
+                                            class="rounded-circle shadow-1-strong me-3"
+                                            src="https://mdbcdn.b-cdn.net/img/Photos/Avatars/img%20(19).webp"
+                                            alt="avatar"
+                                            width="40"
+                                            height="40"
+                                    />
+                                    <!-- new message -->
+
+                                    <div class="form-outline w-100">
+                <textarea class="form-control" id="textAreaExample" name="textComment" rows="4"
+                          style="background: #fff;"></textarea>
+                                        <label class="form-label" for="textAreaExample">Message</label>
+                                    </div>
+                                </div>
+                                <!-- Button -->
+                                <div class="float-end mt-2 pt-1">
+                                    <button type="submit" class="btn btn-secondary btn-sm">Post comment</button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm">Cancel</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>
