@@ -39,13 +39,13 @@ public class OverviewController {
         Iterable<Overview> overviews = overviewRepository.findAll();
         model.addAttribute("overviews", overviews);
         model.addAttribute("title", "overview");
-        return "overview";
+        return "overviews/overview";
     }
 
     @GetMapping("/overview/add")
     public String addOverview(Model model) {
         model.addAttribute("title", "new review");
-        return "overview-add";
+        return "overviews/overview-add";
     }
 
     @PostMapping("/overview/add")
@@ -71,13 +71,13 @@ public class OverviewController {
         if (receiveData(id, model)) return "redirect:/overview";
         Iterable<Comment> comments = commentRepository.findByOverview(overviewRepository.findById(id).orElseThrow());
         model.addAttribute("comments", comments);
-        return "overview-detail";
+        return "overviews/overview-detail";
     }
 
     @GetMapping("/overview/{id}/edit")
     public String edit(@PathVariable(name = "id") long id, Model model) {
         if (receiveData(id, model)) return "redirect:/overview";
-        return "overview-edit";
+        return "overviews/overview-edit";
     }
 
     @PostMapping("/overview/{id}/edit")
