@@ -13,7 +13,7 @@ import javax.persistence.*;
 @Data
 public class Comment extends BaseEntity {
 
-    @Column(name = "message")
+    @Column(columnDefinition = "TEXT", name = "message")
     private String message;
 
     @ManyToOne(fetch = FetchType.EAGER)
