@@ -20,12 +20,10 @@ import javax.servlet.http.HttpServletResponse;
 public class UserController {
 
     private User user;
-    private UserAuthService userAuthService;
-    private HttpServletRequest httpServletRequest;
-    private HttpServletResponse httpServletResponse;
-
-    @Autowired
-    private UserRepository userRepository;
+    private final UserAuthService userAuthService;
+    private final HttpServletRequest httpServletRequest;
+    private final HttpServletResponse httpServletResponse;
+    private final UserRepository userRepository;
 
     @Autowired
     public UserController(UserAuthService userAuthService, HttpServletRequest httpServletRequest,
@@ -34,6 +32,27 @@ public class UserController {
         this.httpServletRequest = httpServletRequest;
         this.httpServletResponse = httpServletResponse;
         this.userRepository = userRepository;
+    }
+
+    @GetMapping("/myProfile")
+    public String showMyProfile(Model model){
+        User user = userRepository.findByUsername(getCurrentUser().getName()).orElseThrow();
+        model.addAttribute("user", user);
+        return "my-profile";
+    }
+
+    @PostMapping("/myProfile")
+    public String editMyProfile(@RequestParam String username, @RequestParam String firstname,
+                                @RequestParam String lastname, @RequestParam String avatar,
+                                @RequestParam String email){
+        User user = userRepository.findByUsername(getCurrentUser().getName()).orElseThrow();
+        user.setUsername(username);
+        user.setFirstName(firstname);
+        user.setLastName(lastname);
+        user.setAvatar(avatar);
+        user.setEmail(email);
+        userRepository.save(user);
+        return "redirect:/myProfile";
     }
 
     @GetMapping("/allUsers")
@@ -89,6 +108,14 @@ public class UserController {
             userRepository.save(user);
         }
         return "redirect:/allUsers";
+    }
+
+    private Boolean receiveData(){
+        return true;
+    }
+
+    private Authentication getCurrentUser() {
+        return SecurityContextHolder.getContext().getAuthentication();
     }
 
 //    @RequestMapping(value = "/block", method = RequestMethod.GET)
