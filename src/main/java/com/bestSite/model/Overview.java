@@ -1,10 +1,13 @@
 package com.bestSite.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "overviews")
+@NoArgsConstructor
 @Data
 public class Overview extends BaseEntity{
 
@@ -18,17 +21,18 @@ public class Overview extends BaseEntity{
     private String text;
 
     @Column(name = "image")
-    private String image = "https://mdbootstrap.com/img/Photos/Others/img%20(28).jpg";
+    private String image;
 
     @Column(name = "rating")
     private int rating;
 
-//    @ManyToOne(fetch = FetchType.EAGER)
-//    @JoinColumn(name = "user_id")
-//    private User author;
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "user_id")
+    private User author;
 
-    public Overview(){
-    }
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "overview_id")
+    private List<Comment> comments;
 
     public Overview(String title, String image, String description, String text ) {
         this.title = title;
