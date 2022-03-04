@@ -1,6 +1,7 @@
 package com.bestSite.model;
 
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.hibernate.annotations.LazyCollection;
 import org.hibernate.annotations.LazyCollectionOption;
 import javax.persistence.*;
@@ -8,11 +9,15 @@ import java.util.List;
 
 @Entity
 @Table(name = "users")
+@NoArgsConstructor
 @Data
 public class User extends BaseEntity {
 
     @Column(name = "username")
     private String username;
+
+    @Column(name = "avatar")
+    private String avatar;
 
     @Column(name = "first_name")
     private String firstName;
@@ -36,11 +41,11 @@ public class User extends BaseEntity {
         return user.getStatus().equals(Status.ACTIVE);
     }
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(name = "user_roles",
-            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
-    private List<Role> roles;
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name = "user_roles",
+//            joinColumns = {@JoinColumn(name = "user_id", referencedColumnName = "id")},
+//            inverseJoinColumns = {@JoinColumn(name = "role_id", referencedColumnName = "id")})
+//    private List<Role> roles;
 
 //    @OneToMany( cascade = CascadeType.ALL)
 //    @LazyCollection(LazyCollectionOption.FALSE)
