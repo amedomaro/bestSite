@@ -41,7 +41,7 @@ public class UserController {
         Iterable<User> user = userRepository.findAll();
         model.addAttribute("user", user);
         model.addAttribute("title", "All users");
-        return "allUsers";
+        return "all-users";
     }
 
     @RequestMapping(value = "/target", method = RequestMethod.GET)
