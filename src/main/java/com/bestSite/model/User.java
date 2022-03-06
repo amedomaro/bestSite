@@ -2,8 +2,6 @@ package com.bestSite.model;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -42,6 +40,13 @@ public class User extends BaseEntity implements UserDetails {
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
+    public void addRole(Role role) {
+        roles.add(role);
+    }
+    public void removeRole(Role role){
+        roles.remove(role);
+    }
+
     public boolean isAccountNonLocked(User user) {
         return user.getStatus().equals(Status.ACTIVE);
     }
@@ -71,8 +76,4 @@ public class User extends BaseEntity implements UserDetails {
         return true;
     }
 
-//    @OneToMany( cascade = CascadeType.ALL)
-//    @LazyCollection(LazyCollectionOption.FALSE)
-//    @JoinColumn(name = "user_id")
-//    private List<Overview> overviews;
 }
