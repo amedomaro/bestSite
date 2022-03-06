@@ -1,5 +1,6 @@
 package com.bestSite.controllers;
 
+import com.bestSite.model.Role;
 import com.bestSite.model.Status;
 import com.bestSite.model.User;
 import com.bestSite.repository.UserRepository;
@@ -20,6 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 public class UserController {
 
     private User user;
+    private final Role role = new Role(2L, "ADMIN");
     private final UserAuthService userAuthService;
     private final HttpServletRequest httpServletRequest;
     private final HttpServletResponse httpServletResponse;
@@ -35,7 +37,7 @@ public class UserController {
     }
 
     @GetMapping("/myProfile")
-    public String showMyProfile(Model model){
+    public String showMyProfile(Model model) {
         user = userRepository.findByUsername(getCurrentUser().getName()).orElseThrow();
         model.addAttribute("user", user);
         return "my-profile";
@@ -44,7 +46,7 @@ public class UserController {
     @PostMapping("/myProfile")
     public String editMyProfile(@RequestParam String username, @RequestParam String firstname,
                                 @RequestParam String lastname, @RequestParam String avatar,
-                                @RequestParam String email){
+                                @RequestParam String email) {
         user = userRepository.findByUsername(getCurrentUser().getName()).orElseThrow();
         user.setUsername(username);
         user.setFirstName(firstname);
@@ -114,6 +116,18 @@ public class UserController {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
+    @PostMapping("/users/makeOrRemoveAdmin/{id}")
+    public String makeOrRemoveAdmin(@PathVariable(value = "id") Long id) {
+        user = userRepository.findById(id).orElseThrow();
+        if (user.getRoles().contains(role)) {
+            user.removeRole(role);
+        } else {
+            user.addRole(role);
+        }
+        userRepository.save(user);
+        return "redirect:/allUsers";
+    }
+
     @PostMapping("/users/blockUnblock/{id}")
     public String blockUnblock(@PathVariable(value = "id") Long id) {
         user = userRepository.findById(id).orElseThrow();
@@ -122,7 +136,7 @@ public class UserController {
         return "redirect:/allUsers";
     }
 
-    @GetMapping("/users/delete/{id}")
+    @PostMapping("/users/delete/{id}")
     public String delete(@PathVariable(value = "id") Long id) {
         user = userRepository.findById(id).orElseThrow();
         userRepository.delete(user);
