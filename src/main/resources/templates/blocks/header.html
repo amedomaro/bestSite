@@ -11,9 +11,6 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/">Home</a>
                     </li>
-                        <li class="nav-item">
-                            <a class="nav-link" href="/myProfile">My Profile</a>
-                        </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/overview">Overview</a>
                     </li>
@@ -21,23 +18,19 @@
                         <a class="nav-link" href="/overview/add">Add review</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/allUsers">All users</a>
+                        <a class="nav-link" href="/myProfile">My Profile</a>
                     </li>
-                    <li class="nav-item">
-                        <a class="nav-link disabled">Disabled</a>
+                    <li sec:authorize="hasAuthority('ADMIN')" class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="/administration">Administration</a>
                     </li>
 
                 </ul>
-                <form class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
+                <form sec:authorize="hasAuthority('ADMIN') or hasAuthority('USER')"
+                      class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
                     <button class="btn btn-outline-success my-2 my-sm-0">Exit</button>
                 </form>
-                <div class="form-inline my-2 mr-3 my-lg-0">
+                <div sec:authorize="isAnonymous()" class="form-inline my-2 mr-3 my-lg-0">
                     <a class="btn btn-outline-success my-2 mr-2 my-sm-0" th:href="@{/login}">Login</a>
-                </div>
-                <div>
-                    <li class="nav-item">
-                        <a class="nav-link" href="/myProfile">My profile</a>
-                    </li>
                 </div>
             </div>
         </div>
