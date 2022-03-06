@@ -36,7 +36,7 @@ public class UserController {
 
     @GetMapping("/myProfile")
     public String showMyProfile(Model model){
-        User user = userRepository.findByUsername(getCurrentUser().getName()).orElseThrow();
+        user = userRepository.findByUsername(getCurrentUser().getName()).orElseThrow();
         model.addAttribute("user", user);
         return "my-profile";
     }
@@ -45,7 +45,7 @@ public class UserController {
     public String editMyProfile(@RequestParam String username, @RequestParam String firstname,
                                 @RequestParam String lastname, @RequestParam String avatar,
                                 @RequestParam String email){
-        User user = userRepository.findByUsername(getCurrentUser().getName()).orElseThrow();
+        user = userRepository.findByUsername(getCurrentUser().getName()).orElseThrow();
         user.setUsername(username);
         user.setFirstName(firstname);
         user.setLastName(lastname);
@@ -110,59 +110,22 @@ public class UserController {
         return "redirect:/allUsers";
     }
 
-    private Boolean receiveData(){
-        return true;
-    }
-
     private Authentication getCurrentUser() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
-//    @RequestMapping(value = "/block", method = RequestMethod.GET)
-//    public String userIsActive(HttpServletRequest request,
-//                               HttpServletResponse response) {
-//
-//        String[] check = request.getParameterValues("isChecked");
-//        if (check == null) {
-//            return "redirect:/allUsers";
-//        } else {
-//            for (int i = 0; i < check.length; i++) {
-//                Long id = Long.parseLong(check[i]);
-//                user = userRepository.getById(id);
-//                user.setStatus(Status.BLOCKED);
-//                userRepository.save(user);
-//            }
-//        }
-//        return "redirect:/allUsers";
-//    }
-//
-//
-//    @RequestMapping(value = "/users/blocked/{id}", method = RequestMethod.GET)
-//    public String logoutPage(HttpServletRequest request, HttpServletResponse response,
-//                             @PathVariable(value = "id") Long id) {
-//        user = userRepository.findById(id).orElseThrow();
-//        user.setStatus(Status.BLOCKED);
-//        userRepository.save(user);
-//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-//        if (user.getUsername().equals(auth.getName())) {
-//            new SecurityContextLogoutHandler().logout(request, response, auth);
-//            return "redirect:/login?logout";
-//        }
-//        return "redirect:/allUsers";
-//    }
-//
-//    @GetMapping("/users/blockUnblock/{id}")
-//    public String blockUnblock(@PathVariable(value = "id") Long id) {
-//        user = userRepository.findById(id).orElseThrow();
-//        user.setStatus(user.getStatus().equals(Status.BLOCKED) ? Status.ACTIVE : Status.BLOCKED);
-//        userRepository.save(user);
-//        return "redirect:/allUsers";
-//    }
-//
-//    @GetMapping("/users/delete/{id}")
-//    public String delete(@PathVariable(value = "id") Long id) {
-//        user = userRepository.findById(id).orElseThrow();
-//        userRepository.delete(user);
-//        return "redirect:/allUsers";
-//    }
+    @PostMapping("/users/blockUnblock/{id}")
+    public String blockUnblock(@PathVariable(value = "id") Long id) {
+        user = userRepository.findById(id).orElseThrow();
+        user.setStatus(user.getStatus().equals(Status.BLOCKED) ? Status.ACTIVE : Status.BLOCKED);
+        userRepository.save(user);
+        return "redirect:/allUsers";
+    }
+
+    @GetMapping("/users/delete/{id}")
+    public String delete(@PathVariable(value = "id") Long id) {
+        user = userRepository.findById(id).orElseThrow();
+        userRepository.delete(user);
+        return "redirect:/allUsers";
+    }
 }
