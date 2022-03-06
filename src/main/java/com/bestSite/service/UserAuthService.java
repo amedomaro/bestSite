@@ -1,6 +1,7 @@
 package com.bestSite.service;
 
 import java.util.*;
+
 import com.bestSite.model.Role;
 import com.bestSite.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +26,15 @@ public class UserAuthService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         com.bestSite.model.User user = userRepository.findByUsername(username).orElseThrow();
-        Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
-        for (Role role : user.getRoles()){
-            grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+        if (user.isAccountNonLocked(user)) {
+            Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
+            for (Role role : user.getRoles()) {
+                grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));
+            }
+            return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
+                    grantedAuthorities);
+        } else {
+            throw new UsernameNotFoundException("User blocked");
         }
-        return new org.springframework.security.core.userdetails.User(user.getUsername(), user.getPassword(),
-                grantedAuthorities);
     }
 }
