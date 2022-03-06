@@ -57,12 +57,16 @@ public class UserController {
         return "redirect:/myProfile";
     }
 
-    @GetMapping("/allUsers")
+    private Authentication getCurrentUser() {
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+    @GetMapping("/administration")
     public String showUsers(Model model) {
         Iterable<User> user = userRepository.findAll();
         model.addAttribute("user", user);
         model.addAttribute("title", "All users");
-        return "all-users";
+        return "administration";
     }
 
     @RequestMapping(value = "/target", method = RequestMethod.GET)
@@ -71,11 +75,11 @@ public class UserController {
         String[] delete = request.getParameterValues("delete");
         String[] block = request.getParameterValues("block");
         String[] unlock = request.getParameterValues("unlock");
-        if (checkBox == null) return "redirect:/allUsers";
+        if (checkBox == null) return "redirect:/administration";
         if (delete != null) deleteUser(checkBox);
         if (block != null) blockUser(checkBox);
         if (unlock != null) unlockUser(checkBox);
-        return "redirect:/allUsers";
+        return "redirect:/administration";
     }
 
     private String deleteUser(String[] checkBox) {
@@ -83,13 +87,12 @@ public class UserController {
             user = userRepository.findById(Long.parseLong(id)).orElseThrow();
             userRepository.delete(user);
         }
-        return "redirect:/allUsers";
+        return "redirect:/administration";
     }
 
     private String blockUser(String[] checkBox) {
         boolean isFlag = false;
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         for (String id : checkBox) {
             user = userRepository.findById(Long.parseLong(id)).orElseThrow();
             user.setStatus(Status.BLOCKED);
@@ -100,7 +103,7 @@ public class UserController {
             new SecurityContextLogoutHandler().logout(httpServletRequest, httpServletResponse, auth);
             return "redirect:/login";
         }
-        return "redirect:/allUsers";
+        return "redirect:/administration";
     }
 
     private String unlockUser(String[] checkBox) {
@@ -109,11 +112,7 @@ public class UserController {
             user.setStatus(Status.ACTIVE);
             userRepository.save(user);
         }
-        return "redirect:/allUsers";
-    }
-
-    private Authentication getCurrentUser() {
-        return SecurityContextHolder.getContext().getAuthentication();
+        return "redirect:/administration";
     }
 
     @PostMapping("/users/makeOrRemoveAdmin/{id}")
@@ -125,7 +124,7 @@ public class UserController {
             user.addRole(role);
         }
         userRepository.save(user);
-        return "redirect:/allUsers";
+        return "redirect:/administration";
     }
 
     @PostMapping("/users/blockUnblock/{id}")
@@ -133,13 +132,13 @@ public class UserController {
         user = userRepository.findById(id).orElseThrow();
         user.setStatus(user.getStatus().equals(Status.BLOCKED) ? Status.ACTIVE : Status.BLOCKED);
         userRepository.save(user);
-        return "redirect:/allUsers";
+        return "redirect:/administration";
     }
 
     @PostMapping("/users/delete/{id}")
     public String delete(@PathVariable(value = "id") Long id) {
         user = userRepository.findById(id).orElseThrow();
         userRepository.delete(user);
-        return "redirect:/allUsers";
+        return "redirect:/administration";
     }
 }
