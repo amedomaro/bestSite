@@ -59,9 +59,14 @@
         <table class="table table-hover">
             <thead>
             <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
-                <button th:action="@{/target}" name="block" value="true" class="btn btn-secondary" type="submit">Block</button>
-                <button th:action="@{/target}" name="unlock" value="true" class="btn btn-secondary" type="submit">Unlock</button>
-                <button th:action="@{/target}" name="delete" value="true" class="btn btn-secondary" type="submit">Delete</button>
+                <button th:action="@{/target}" name="block" value="true" class="btn btn-secondary" type="submit">Block
+                </button>
+                <button th:action="@{/target}" name="unlock" value="true" class="btn btn-secondary" type="submit">
+                    Unlock
+                </button>
+                <button th:action="@{/target}" name="delete" value="true" class="btn btn-secondary" type="submit">
+                    Delete
+                </button>
             </div>
             <tr>
                 <th scope="col">
@@ -70,7 +75,8 @@
                 <th scope="col">Username</th>
                 <th scope="col">First name</th>
                 <th scope="col">Last name</th>
-                <th scope="col">email</th>
+                <th scope="col">Email</th>
+                <th scope="col">Role</th>
                 <th scope="col">Status</th>
             </tr>
             </thead>
@@ -85,12 +91,38 @@
                     <td><p th:text="${el.firstName}"/></td>
                     <td><p th:text="${el.lastName}"/></td>
                     <td><p th:text="${el.email}"/></td>
+                    <td>
+                        <span th:each="role, interStat:${el.getRoles()}"
+                              th:text="${role.name} + ${!interStat.last ? ', ' : ''}">
+                        </span>
+                    </td>
                     <td><p th:text="${el.status}"/></td>
+                    <td>
+                        <div class="btn-group" role="group">
+                            <button type="button" class="btn btn-outline-dark dropdown-toggle"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown
+                            </button>
+                            <div class="dropdown-menu">
+                                <form th:action="'/users/blockUnblock/' + ${el.id} " method="post">
+                                    <button class="btn btn-outline-dark mt-1" type="submit">Unblocked/Blocked</button>
+                                </form>
+                                <form th:action="'/users/makeOrRemoveAdmin/' + ${el.id} " method="post">
+                                    <button class="btn btn-outline-dark mt-1" type="submit">Make/Remove admin</button>
+                                </form>
+                                <form th:action="'/users/delete/' + ${el.id} " method="post">
+                                    <button class="btn btn-outline-dark mt-1" type="submit">Delete</button>
+                                </form>
+                            </div>
+                        </div>
+                    </td>
                 </tr>
             </div>
+            <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+            <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
             </tbody>
         </table>
-        </form>
+    </form>
     </form>
 
     <script>
