@@ -21,7 +21,7 @@ import javax.servlet.http.HttpServletResponse;
 public class UserController {
 
     private User user;
-    private final Role role = new Role(2L, "ADMIN");
+    private final Role roleAdmin = new Role(2L, "ADMIN");
     private final UserAuthService userAuthService;
     private final HttpServletRequest httpServletRequest;
     private final HttpServletResponse httpServletResponse;
@@ -118,10 +118,10 @@ public class UserController {
     @PostMapping("/users/makeOrRemoveAdmin/{id}")
     public String makeOrRemoveAdmin(@PathVariable(value = "id") Long id) {
         user = userRepository.findById(id).orElseThrow();
-        if (user.getRoles().contains(role)) {
-            user.removeRole(role);
+        if (user.getRoles().contains(roleAdmin)) {
+            user.removeRole(roleAdmin);
         } else {
-            user.addRole(role);
+            user.addRole(roleAdmin);
         }
         userRepository.save(user);
         return "redirect:/administration";
