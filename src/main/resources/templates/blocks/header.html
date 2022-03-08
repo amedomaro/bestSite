@@ -9,29 +9,40 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/">Home</a>
+                        <a class="nav-link active lang" key="home" aria-current="page" href="/">Home page</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/overview">Overview</a>
+                        <a class="nav-link lang" key="overview" href="/overview">Overview</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/overview/add">Add review</a>
+                        <a class="nav-link lang" key="add-review" href="/overview/add">Add review</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/myProfile">My Profile</a>
+                        <a class="nav-link lang" key="profile" href="/myProfile">My profile</a>
                     </li>
                     <li sec:authorize="hasAuthority('ADMIN')" class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="/administration">Administration</a>
+                        <a class="nav-link active lang" key="admin" aria-current="page" href="/administration">Administration</a>
                     </li>
-
                 </ul>
-                <form sec:authorize="hasAuthority('ADMIN') or hasAuthority('USER')"
-                      class="form-inline my-2 my-lg-0" th:action="@{/logout}" method="post">
-                    <button class="btn btn-outline-success my-2 my-sm-0">Exit</button>
-                </form>
-                <div sec:authorize="isAnonymous()" class="form-inline my-2 mr-3 my-lg-0">
-                    <a class="btn btn-outline-success my-2 mr-2 my-sm-0" th:href="@{/login}">Login</a>
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mr-2" role="group" aria-label="First group" >
+                        <li class="header-lang-ru" style="margin-right: 6px">
+                            <button id="ru" class="translate btn-dark">RU</button>
+                        </li>
+                    </div>
+                    <div class="btn-group mr-2 " role="group" aria-label="Second group" >
+                        <li class="header-lang-en" style="margin-right: 25px">
+                            <button id="en" class="translate btn-dark">EN</button>
+                        </li>
+                    </div>
                 </div>
+                <form sec:authorize="hasAuthority('ADMIN') or hasAuthority('USER')"
+                      class="form-inline" th:action="@{/logout}" method="post">
+                    <button class="btn btn-outline-success lang" key="logout">Exit</button>
+                </form>
+                <form sec:authorize="isAnonymous()" class="form-inline" th:action="@{/login}" method="get">
+                    <button class="btn btn-outline-success lang" key="login">Login</button>
+                </form>
             </div>
         </div>
     </nav>
