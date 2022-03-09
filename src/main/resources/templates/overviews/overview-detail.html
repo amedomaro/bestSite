@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
-    <links-header th:insert="blocks/translation/header-translete :: translation"></links-header>
+    <link th:insert="blocks/translate :: translation">
     <title>overview detail</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
@@ -38,12 +38,11 @@
                 </table>
                 <!--Button-->
                 <div sec:authorize="hasAuthority('ADMIN')">
-                    <a th:href="'/overview/' + ${el.id} + '/edit'">Edit...</a><br><br>
+                    <a class="lang" key="edit" th:href="'/overview/' + ${el.id} + '/edit'">Edit</a><br><br>
                 </div>
                 <form sec:authorize="hasAuthority('ADMIN')" class="form-inline my-2 my-lg-0"
                       th:action="'/overview/' + ${el.id} + '/delete'" method="post">
-                    <button type="submit" class="btn btn-secondary">Delete&nbsp;<i class="far fa-paper-plane ml-2"></i>
-                    </button>
+                    <button type="submit" class="btn btn-secondary lang" key="delete">Delete</button>
                 </form>
             </div>
         </section>
