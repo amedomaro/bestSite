@@ -35,7 +35,7 @@
                 </div><br>
                 <div class="form-group">
                     <label class="lang" key="email" for="email">email</label>
-                    <input type="text" id="email" th:field="${user.email}" class="form-control" placeholder="Enter email">
+                    <input type="email" id="email" th:field="${user.email}" class="form-control" placeholder="Enter email">
                     <small class="form-text text-danger" th:each="err:${#fields.errors('email')}">Validation error</small>
                 </div><br>
                 <div class="form-group">
