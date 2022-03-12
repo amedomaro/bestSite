@@ -1,23 +1,45 @@
 package com.bestSite.service;
 
+import com.bestSite.model.Overview;
 import com.bestSite.model.Role;
 import com.bestSite.model.Status;
 import com.bestSite.model.User;
+import com.bestSite.repository.OverviewRepository;
 import com.bestSite.repository.RoleRepository;
 import com.bestSite.repository.UserRepository;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
+import org.springframework.ui.Model;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.Optional;
 
 @Service
-@AllArgsConstructor
 public class UserService {
 
+    private User user;
+    private final HttpServletRequest httpServletRequest;
+    private final HttpServletResponse httpServletResponse;
     private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
+    private final OverviewRepository overviewRepository;
+    private RoleRepository roleRepository;
     private final BCryptPasswordEncoder passwordEncoder;
+
+    @Autowired
+    public UserService(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
+                       UserRepository userRepository, OverviewRepository overviewRepository, BCryptPasswordEncoder passwordEncoder) {
+        this.httpServletRequest = httpServletRequest;
+        this.httpServletResponse = httpServletResponse;
+        this.userRepository = userRepository;
+        this.overviewRepository = overviewRepository;
+        this.passwordEncoder = passwordEncoder;
+    }
 
     public boolean checkUser(User user) {
         Optional<User> userFromDB = userRepository.findByUsername(user.getUsername());
@@ -36,5 +58,48 @@ public class UserService {
         if(checkUser(user)){
             userRepository.save(user);
         }
+    }
+
+    public Model showProfile(Model model, User user) {
+        Iterable<Overview> overviews = overviewRepository.findAllByAuthor(user);
+        model.addAttribute("user", user);
+        model.addAttribute("overviews", overviews);
+        return model;
+    }
+    private Authentication getCurrentUser() {
+        return SecurityContextHolder.getContext().getAuthentication();
+    }
+
+    public String deleteUser(String[] checkBox) {
+        for (String id : checkBox) {
+            user = userRepository.findById(Long.parseLong(id)).orElseThrow();
+            userRepository.delete(user);
+        }
+        return "redirect:/administration";
+    }
+
+    public String blockUser(String[] checkBox) {
+        boolean isFlag = false;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        for (String id : checkBox) {
+            user = userRepository.findById(Long.parseLong(id)).orElseThrow();
+            user.setStatus(Status.BLOCKED);
+            userRepository.save(user);
+            if (user.getUsername().equals(auth.getName())) isFlag = true;
+        }
+        if (isFlag) {
+            new SecurityContextLogoutHandler().logout(httpServletRequest, httpServletResponse, auth);
+            return "redirect:/login";
+        }
+        return "redirect:/administration";
+    }
+
+    public String unlockUser(String[] checkBox) {
+        for (String id : checkBox) {
+            user = userRepository.findById(Long.parseLong(id)).orElseThrow();
+            user.setStatus(Status.ACTIVE);
+            userRepository.save(user);
+        }
+        return "redirect:/administration";
     }
 }

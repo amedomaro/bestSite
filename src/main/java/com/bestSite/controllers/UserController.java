@@ -1,45 +1,51 @@
 package com.bestSite.controllers;
 
+import com.bestSite.model.Overview;
 import com.bestSite.model.Role;
 import com.bestSite.model.Status;
 import com.bestSite.model.User;
+import com.bestSite.repository.OverviewRepository;
 import com.bestSite.repository.UserRepository;
-import com.bestSite.service.UserAuthService;
+import com.bestSite.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
-
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 
 @Controller
 public class UserController {
 
     private User user;
+    private final UserService userService;
     private final Role roleAdmin = new Role(2L, "ADMIN");
-    private final UserAuthService userAuthService;
-    private final HttpServletRequest httpServletRequest;
-    private final HttpServletResponse httpServletResponse;
     private final UserRepository userRepository;
+    private final OverviewRepository overviewRepository;
 
     @Autowired
-    public UserController(UserAuthService userAuthService, HttpServletRequest httpServletRequest,
-                          HttpServletResponse httpServletResponse, UserRepository userRepository) {
-        this.userAuthService = userAuthService;
-        this.httpServletRequest = httpServletRequest;
-        this.httpServletResponse = httpServletResponse;
+    public UserController(UserService userService, UserRepository userRepository,
+                          OverviewRepository overviewRepository) {
+        this.userService = userService;
         this.userRepository = userRepository;
+        this.overviewRepository = overviewRepository;
     }
 
     @GetMapping("/myProfile")
     public String showMyProfile(Model model) {
         user = userRepository.findByUsername(getCurrentUser().getName()).orElseThrow();
-        model.addAttribute("user", user);
+        userService.showProfile(model, user);
+        return "my-profile";
+    }
+
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/myProfile/{id}")
+    public String showUserProfile(@PathVariable(name = "id") long id, Model model) {
+        user = userRepository.findById(id).orElseThrow();
+        userService.showProfile(model, user);
         return "my-profile";
     }
 
@@ -61,6 +67,7 @@ public class UserController {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/administration")
     public String showUsers(Model model) {
         Iterable<User> user = userRepository.findAll();
@@ -76,44 +83,12 @@ public class UserController {
         String[] block = request.getParameterValues("block");
         String[] unlock = request.getParameterValues("unlock");
         if (checkBox == null) return "redirect:/administration";
-        if (delete != null) deleteUser(checkBox);
-        if (block != null) blockUser(checkBox);
-        if (unlock != null) unlockUser(checkBox);
+        if (delete != null) userService.deleteUser(checkBox);
+        if (block != null) userService.blockUser(checkBox);
+        if (unlock != null) userService.unlockUser(checkBox);
         return "redirect:/administration";
     }
 
-    private String deleteUser(String[] checkBox) {
-        for (String id : checkBox) {
-            user = userRepository.findById(Long.parseLong(id)).orElseThrow();
-            userRepository.delete(user);
-        }
-        return "redirect:/administration";
-    }
-
-    private String blockUser(String[] checkBox) {
-        boolean isFlag = false;
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        for (String id : checkBox) {
-            user = userRepository.findById(Long.parseLong(id)).orElseThrow();
-            user.setStatus(Status.BLOCKED);
-            userRepository.save(user);
-            if (user.getUsername().equals(auth.getName())) isFlag = true;
-        }
-        if (isFlag) {
-            new SecurityContextLogoutHandler().logout(httpServletRequest, httpServletResponse, auth);
-            return "redirect:/login";
-        }
-        return "redirect:/administration";
-    }
-
-    private String unlockUser(String[] checkBox) {
-        for (String id : checkBox) {
-            user = userRepository.findById(Long.parseLong(id)).orElseThrow();
-            user.setStatus(Status.ACTIVE);
-            userRepository.save(user);
-        }
-        return "redirect:/administration";
-    }
 
     @PostMapping("/users/makeOrRemoveAdmin/{id}")
     public String makeOrRemoveAdmin(@PathVariable(value = "id") Long id) {

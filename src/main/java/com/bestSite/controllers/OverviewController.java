@@ -22,6 +22,7 @@ import java.util.Optional;
 @Controller
 public class OverviewController {
 
+    private Overview overview;
     private final OverviewRepository overviewRepository;
     private final UserRepository userRepository;
     private final CommentRepository commentRepository;
@@ -51,7 +52,8 @@ public class OverviewController {
     @PostMapping("/overview/add")
     public String addPostOverview(@RequestParam String title, @RequestParam String image,
                                   @RequestParam String description, @RequestParam String text) {
-        Overview overview = new Overview(title, image, description, text);
+        overview = new Overview(title, image, description, text);
+        overview.setAuthor(userRepository.findByUsername(getCurrentUser().getName()).orElseThrow());
         overviewRepository.save(overview);
         return "redirect:/overview";
     }
@@ -59,7 +61,7 @@ public class OverviewController {
     @PostMapping("/overview/{id}")
     public String addComment(@PathVariable(value = "id") long id,
                              @RequestParam(name = "textComment") String text, Model model) {
-        Overview overview = overviewRepository.findById(id).orElseThrow();
+        overview = overviewRepository.findById(id).orElseThrow();
         User user = userRepository.findByUsername(getCurrentUser().getName()).orElseThrow();
         Comment comment = new Comment(text, overview, user);
         commentRepository.save(comment);
@@ -83,7 +85,7 @@ public class OverviewController {
     @PostMapping("/overview/{id}/edit")
     public String overviewUpdate(@PathVariable(name = "id") long id, @RequestParam String title, @RequestParam String image,
                                  @RequestParam String description, @RequestParam String text) {
-        Overview overview = overviewRepository.findById(id).orElseThrow();
+        overview = overviewRepository.findById(id).orElseThrow();
         overview.setTitle(title);
         overview.setImage(image);
         overview.setDescription(description);
@@ -94,7 +96,7 @@ public class OverviewController {
 
     @PostMapping("/overview/{id}/delete")
     public String overviewDelete(@PathVariable(name = "id") long id, Model model) {
-        Overview overview = overviewRepository.findById(id).orElseThrow();
+        overview = overviewRepository.findById(id).orElseThrow();
         overviewRepository.delete(overview);
         return "redirect:/overview";
     }
