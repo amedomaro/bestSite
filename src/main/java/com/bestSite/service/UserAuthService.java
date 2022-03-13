@@ -26,7 +26,7 @@ public class UserAuthService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         com.bestSite.model.User user = userRepository.findByUsername(username).orElseThrow();
-        if (user.isAccountNonLocked(user)) {
+        if (user.isAccountNonLocked()) {
             Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
             for (Role role : user.getRoles()) {
                 grantedAuthorities.add(new SimpleGrantedAuthority(role.getName()));

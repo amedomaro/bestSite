@@ -52,10 +52,6 @@ public class User extends BaseEntity implements UserDetails {
         roles.remove(role);
     }
 
-    public boolean isAccountNonLocked(User user) {
-        return user.getStatus().equals(Status.ACTIVE);
-    }
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getRoles();
@@ -68,7 +64,7 @@ public class User extends BaseEntity implements UserDetails {
 
     @Override
     public boolean isAccountNonLocked() {
-        return true;
+        return status.equals(Status.ACTIVE);
     }
 
     @Override
