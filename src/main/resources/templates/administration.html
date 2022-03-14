@@ -104,8 +104,8 @@
                     <td><p th:text="${el.status}"/></td>
                     <td>
                         <div class="btn-group" role="group">
-                            <button type="button" class="btn btn-outline-dark dropdown-toggle lang" key="dropdown"
-                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown
+                            <button type="button" class="btn btn-outline-dark dropdown-toggle lang" key="actions"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Actions
                             </button>
                             <div class="dropdown-menu">
                                 <form th:action="'/myProfile/' + ${el.id} " method="get">
