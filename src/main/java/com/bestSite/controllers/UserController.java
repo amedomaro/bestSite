@@ -49,11 +49,12 @@ public class UserController {
         return "my-profile";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN') or #username == authentication.name")
     @PostMapping("/myProfile")
     public String editMyProfile(@RequestParam String username, @RequestParam String firstname,
                                 @RequestParam String lastname, @RequestParam String avatar,
                                 @RequestParam String email) {
-        user = userRepository.findByUsername(getCurrentUser().getName()).orElseThrow();
+        user = userRepository.findByUsername(username).orElseThrow();
         user.setUsername(username);
         user.setFirstName(firstname);
         user.setLastName(lastname);
