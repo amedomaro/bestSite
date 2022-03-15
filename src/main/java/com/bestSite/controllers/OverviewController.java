@@ -7,6 +7,7 @@ import com.bestSite.repository.CommentRepository;
 import com.bestSite.repository.OverviewRepository;
 import com.bestSite.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
@@ -43,19 +44,46 @@ public class OverviewController {
         return "overviews/overview";
     }
 
-    @GetMapping("/overview/add")
-    public String addOverview(Model model) {
-        model.addAttribute("title", "new review");
+//    @GetMapping("/overview/add")
+//    public String addOverview(Model model) {
+//        model.addAttribute("user", userRepository.findByUsername(getCurrentUser().getName()).orElseThrow());
+//        return "overviews/overview-add";
+//    }
+//
+//    @PostMapping("/overview/add")
+//    public String addOverview(@RequestParam String title, @RequestParam String image,
+//                              @RequestParam String description, @RequestParam String text, Model model) {
+//        overview = new Overview(title, image, description, text);
+//        overview.setAuthor(userRepository.findByUsername(getCurrentUser().getName()).orElseThrow());
+//        overviewRepository.save(overview);
+//        return "redirect:/overview";
+//    }
+
+//    @PreAuthorize("hasAuthority('ADMIN')")
+    @GetMapping("/overview/add/{id}")
+    public String addOverviewFromUser(@PathVariable(value = "id") long id, Model model) {
+        model.addAttribute("user", userRepository.findById(id));
         return "overviews/overview-add";
     }
 
-    @PostMapping("/overview/add")
-    public String addPostOverview(@RequestParam String title, @RequestParam String image,
-                                  @RequestParam String description, @RequestParam String text) {
+    //#user.username.equals(authentication.name)
+    //@PreAuthorize("hasAuthority('ADMIN')")
+    @PostMapping("/overview/add/{id}")
+    public String addOverviewFromUser(@PathVariable(value = "id") long id,
+                              @RequestParam String title, @RequestParam String image,
+                              @RequestParam String description, @RequestParam String text) {
         overview = new Overview(title, image, description, text);
-        overview.setAuthor(userRepository.findByUsername(getCurrentUser().getName()).orElseThrow());
+        overview.setAuthor(userRepository.findById(id).orElseThrow());
         overviewRepository.save(overview);
         return "redirect:/overview";
+    }
+
+    @GetMapping("/overview/{id}")
+    public String showDetail(@PathVariable(name = "id") long id, Model model) {
+        if (receiveData(id, model)) return "redirect:/overview";
+        Iterable<Comment> comments = commentRepository.findByOverview(overviewRepository.findById(id).orElseThrow());
+        model.addAttribute("comments", comments);
+        return "overviews/overview-detail";
     }
 
     @PostMapping("/overview/{id}")
@@ -66,14 +94,6 @@ public class OverviewController {
         Comment comment = new Comment(text, overview, user);
         commentRepository.save(comment);
         return "redirect:/overview/{id}";
-    }
-
-    @GetMapping("/overview/{id}")
-    public String showDetail(@PathVariable(name = "id") long id, Model model) {
-        if (receiveData(id, model)) return "redirect:/overview";
-        Iterable<Comment> comments = commentRepository.findByOverview(overviewRepository.findById(id).orElseThrow());
-        model.addAttribute("comments", comments);
-        return "overviews/overview-detail";
     }
 
     @GetMapping("/overview/{id}/edit")

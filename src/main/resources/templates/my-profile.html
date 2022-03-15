@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 <head>
     <link th:insert="blocks/translate :: translation">
     <title>My profile</title>
@@ -79,7 +79,11 @@
                                 </tbody>
                             </table>
                             <hr class="my-3">
-                            <a class="nav-link lang" key="add-review" href="/overview/add">Add review</a>
+                            <!--Links-->
+                            <a class="nav-link lang" key="add-review" th:href="'/overview/add/' + ${user.id}">Add review</a><br>
+
+                            <!--a sec:authorize="hasAuthority('ADMIN')" class="nav-link lang" key="add-review-admin"
+                               th:href="'/overview/add/' + ${user.id}">Add review as User</a-->
                         </div>
                     </div>
                 </div>

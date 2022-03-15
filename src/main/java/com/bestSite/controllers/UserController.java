@@ -49,7 +49,7 @@ public class UserController {
         return "my-profile";
     }
 
-    @PreAuthorize("hasAuthority('ADMIN') or #username == authentication.name")
+    @PreAuthorize("hasAuthority('ADMIN') or #username.equals(authentication.name)")
     @PostMapping("/myProfile")
     public String editMyProfile(@RequestParam String username, @RequestParam String firstname,
                                 @RequestParam String lastname, @RequestParam String avatar,
