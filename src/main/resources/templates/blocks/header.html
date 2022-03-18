@@ -25,10 +25,17 @@
                     </li>
                 </ul>
 
-                <div>
-                    <form class="header-lang-ru" style="margin-right: 30px" th:action="@{/#}" method="post">
-                        <button class="translate btn-dark">Dark theme</button>
-                    </form>
+                <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+                    <div class="btn-group mr-2" role="group" aria-label="First group" >
+                        <li class="header-lang-ru" style="margin-right: 6px">
+                            <button id="ru" class="translate btn-dark">RU</button>
+                        </li>
+                    </div>
+                    <div class="btn-group mr-2 " role="group" aria-label="Second group" >
+                        <li class="header-lang-en" style="margin-right: 25px">
+                            <button id="en" class="translate btn-dark">EN</button>
+                        </li>
+                    </div>
                 </div>
                 <form sec:authorize="hasAuthority('ADMIN') or hasAuthority('USER')"
                       class="form-inline" th:action="@{/logout}" method="post">
