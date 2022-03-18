@@ -5,7 +5,6 @@ import com.bestSite.model.Role;
 import com.bestSite.model.Status;
 import com.bestSite.model.User;
 import com.bestSite.repository.OverviewRepository;
-import com.bestSite.repository.RoleRepository;
 import com.bestSite.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -14,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -28,16 +28,17 @@ public class UserService {
     private final HttpServletResponse httpServletResponse;
     private final UserRepository userRepository;
     private final OverviewRepository overviewRepository;
-    private RoleRepository roleRepository;
+    private final CloudService cloudService;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
     public UserService(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                       UserRepository userRepository, OverviewRepository overviewRepository, BCryptPasswordEncoder passwordEncoder) {
+                       UserRepository userRepository, OverviewRepository overviewRepository, CloudService cloudService, BCryptPasswordEncoder passwordEncoder) {
         this.httpServletRequest = httpServletRequest;
         this.httpServletResponse = httpServletResponse;
         this.userRepository = userRepository;
         this.overviewRepository = overviewRepository;
+        this.cloudService = cloudService;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -51,6 +52,7 @@ public class UserService {
         user.setUsername(userRegistration.getUsername());
         user.setFirstName(userRegistration.getFirstName());
         user.setLastName(userRegistration.getLastName());
+        user.setAvatar("bf98f4bd-2d35-4698-bb50-c66eddf100e4.standartAvatar.jpg");
         user.setEmail(userRegistration.getEmail());
         user.setPassword(passwordEncoder.encode(userRegistration.getPassword()));
         user.setRoles(Collections.singleton(new Role(1L, "USER")));
@@ -60,13 +62,23 @@ public class UserService {
         }
     }
 
+    public void userUpdate(long id, User updatedUser, Optional <MultipartFile> newAvatar){
+        String avatar = cloudService.uploadFile(newAvatar.orElseThrow());
+        user = userRepository.findById(id).orElseThrow();
+        user.setFirstName(updatedUser.getFirstName());
+        user.setLastName(updatedUser.getLastName());
+        user.setAvatar(avatar);
+        user.setEmail(updatedUser.getEmail());
+        userRepository.save(user);
+    }
+
     public Model showProfile(Model model, User user) {
         Iterable<Overview> overviews = overviewRepository.findAllByAuthor(user);
         model.addAttribute("user", user);
         model.addAttribute("overviews", overviews);
         return model;
     }
-    private Authentication getCurrentUser() {
+    public Authentication getCurrentUser() {
         return SecurityContextHolder.getContext().getAuthentication();
     }
 
@@ -102,4 +114,5 @@ public class UserService {
         }
         return "redirect:/administration";
     }
+
 }
