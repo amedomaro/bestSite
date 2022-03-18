@@ -36,7 +36,6 @@ public class CloudService {
         String fileName = uuidFile + "." + file.getOriginalFilename();
         s3Client.putObject(new PutObjectRequest(bucketName, fileName, fileObj));
         new ResponseEntity<>(fileName, HttpStatus.OK);
-        fileName= "https://best-site.s3.us-east-2.amazonaws.com/" + fileName;
         fileObj.delete();
         return fileName;
     }
