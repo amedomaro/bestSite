@@ -1,42 +1,37 @@
 package com.bestSite.controllers;
 
-import com.bestSite.model.Overview;
 import com.bestSite.model.Role;
 import com.bestSite.model.Status;
 import com.bestSite.model.User;
-import com.bestSite.repository.OverviewRepository;
 import com.bestSite.repository.UserRepository;
 import com.bestSite.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Optional;
 
 
 @Controller
 public class UserController {
 
     private User user;
-    private final UserService userService;
     private final Role roleAdmin = new Role(2L, "ADMIN");
+    private final UserService userService;
     private final UserRepository userRepository;
-    private final OverviewRepository overviewRepository;
 
     @Autowired
-    public UserController(UserService userService, UserRepository userRepository,
-                          OverviewRepository overviewRepository) {
+    public UserController(UserService userService, UserRepository userRepository) {
         this.userService = userService;
         this.userRepository = userRepository;
-        this.overviewRepository = overviewRepository;
     }
 
     @GetMapping("/myProfile")
     public String showMyProfile(Model model) {
-        user = userRepository.findByUsername(getCurrentUser().getName()).orElseThrow();
+        user = userRepository.findByUsername(userService.getCurrentUser().getName()).orElseThrow();
         userService.showProfile(model, user);
         return "my-profile";
     }
@@ -49,23 +44,12 @@ public class UserController {
         return "my-profile";
     }
 
-    @PreAuthorize("hasAuthority('ADMIN') or #username.equals(authentication.name)")
-    @PostMapping("/myProfile")
-    public String editMyProfile(@RequestParam String username, @RequestParam String firstname,
-                                @RequestParam String lastname, @RequestParam String avatar,
-                                @RequestParam String email) {
-        user = userRepository.findByUsername(username).orElseThrow();
-        user.setUsername(username);
-        user.setFirstName(firstname);
-        user.setLastName(lastname);
-        user.setAvatar(avatar);
-        user.setEmail(email);
-        userRepository.save(user);
+    @PreAuthorize("hasAuthority('ADMIN') or #user.getUsername().equals(authentication.name)")
+    @PostMapping("/myProfile/{id}")
+    public String editMyProfile(@PathVariable(name = "id") long id, @ModelAttribute("user") User user,
+                                @RequestParam Optional <MultipartFile> newAvatar) {
+        userService.userUpdate(id, user, newAvatar);
         return "redirect:/myProfile";
-    }
-
-    private Authentication getCurrentUser() {
-        return SecurityContextHolder.getContext().getAuthentication();
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
@@ -73,7 +57,6 @@ public class UserController {
     public String showUsers(Model model) {
         Iterable<User> user = userRepository.findAll();
         model.addAttribute("user", user);
-        model.addAttribute("title", "All users");
         return "administration";
     }
 
