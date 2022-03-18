@@ -52,7 +52,6 @@ public class UserService {
         user.setUsername(userRegistration.getUsername());
         user.setFirstName(userRegistration.getFirstName());
         user.setLastName(userRegistration.getLastName());
-        user.setAvatar("bf98f4bd-2d35-4698-bb50-c66eddf100e4.standartAvatar.jpg");
         user.setEmail(userRegistration.getEmail());
         user.setPassword(passwordEncoder.encode(userRegistration.getPassword()));
         user.setRoles(Collections.singleton(new Role(1L, "USER")));
@@ -67,8 +66,9 @@ public class UserService {
         user = userRepository.findById(id).orElseThrow();
         user.setFirstName(updatedUser.getFirstName());
         user.setLastName(updatedUser.getLastName());
-        user.setAvatar(avatar);
         user.setEmail(updatedUser.getEmail());
+        if(user.getAvatar() != null) cloudService.deleteFile(user.getAvatar());
+        user.setAvatar(avatar);
         userRepository.save(user);
     }
 
