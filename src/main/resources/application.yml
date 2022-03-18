@@ -1,0 +1,16 @@
+cloud:
+  aws:
+    credentials:
+      access-key: AKIAZFITJ6BPOU2VD67K
+      secret-key: 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
+    region:
+      static: us-east-2
+      auto: false
+
+application:
+  bucket:
+    name: best-site
+
+
+server:
+  port: 8080
