@@ -10,7 +10,7 @@
 <header th:insert="blocks/header :: header"></header>
 
 <div class="container my-5 py-5 z-depth-1">
-    <div th:each=" el: ${overview}">
+    <div th:each="el: ${overview}">
 
         <section class="px-md-5 mx-md-5 text-center text-lg-left dark-grey-text">
             <h3 th:text="${el.title}" class="font-weight-bold"></h3>
@@ -18,7 +18,7 @@
             <div class="row">
                 <!--Image-->
                 <div class="view overlay z-depth-1-half">
-                    <img class="img-fluid bd-placeholder-img" width="650" height="550" th:src="${el.image}"
+                    <img class="img-fluid bd-placeholder-img" width="650" height="550" th:src="@{'/img/' + ${el.image}}"
                          alt=""><br><br><br><br>
                 </div>
                 <!--Text-->
