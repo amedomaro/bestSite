@@ -47,26 +47,13 @@ public class OverviewController {
                 userRepository.findByUsername(userService.getCurrentUser().getName()).orElseThrow());
         return "overviews/overview-add";
     }
-//
-//    @PostMapping("/overview/add")
-//    public String addOverview(@RequestParam String title, @RequestParam String image,
-//                              @RequestParam String description, @RequestParam String text, Model model) {
-//        overview = new Overview(title, image, description, text);
-//        overview.setAuthor(userRepository.findByUsername(getCurrentUser().getName()).orElseThrow());
-//        overviewRepository.save(overview);
-//        return "redirect:/overview";
-//    }
 
-    //    @PreAuthorize("hasAuthority('ADMIN')")
     @GetMapping("/overview/add/{id}")
-    public String addOverviewFromUser(@PathVariable(value = "id") long id, @ModelAttribute("overview") Overview overview,
-                                      Model model) {
-        model.addAttribute("user", userRepository.findById(id));
+    public String addOverviewFromUser(@PathVariable(value = "id") long id, Model model) {
+        model.addAttribute("user", userRepository.findById(id).orElseThrow());
         return "overviews/overview-add";
     }
 
-    //#user.username.equals(authentication.name)
-    //@PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/overview/add/{id}")
     public String addOverviewFromUser(@PathVariable(value = "id") long id, @ModelAttribute("overview") Overview overview,
                                       @RequestParam Optional<MultipartFile> newImage) {
@@ -106,5 +93,4 @@ public class OverviewController {
         overviewService.deleteOverview(id);
         return "redirect:/overview";
     }
-
 }
