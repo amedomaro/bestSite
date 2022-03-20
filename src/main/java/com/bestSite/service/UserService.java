@@ -47,13 +47,13 @@ public class UserService {
         return userFromDB.isEmpty();
     }
 
-    public void register(UserRegistration userRegistration){
+    public void register(User newUser){
         User user = new User();
-        user.setUsername(userRegistration.getUsername());
-        user.setFirstName(userRegistration.getFirstName());
-        user.setLastName(userRegistration.getLastName());
-        user.setEmail(userRegistration.getEmail());
-        user.setPassword(passwordEncoder.encode(userRegistration.getPassword()));
+        user.setUsername(newUser.getUsername());
+        user.setFirstName(newUser.getFirstName());
+        user.setLastName(newUser.getLastName());
+        user.setEmail(newUser.getEmail());
+        user.setPassword(passwordEncoder.encode(newUser.getPassword()));
         user.setRoles(Collections.singleton(new Role(1L, "USER")));
         user.setStatus(Status.ACTIVE);
         if(checkUser(user)){
