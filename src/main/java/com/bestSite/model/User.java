@@ -45,6 +45,9 @@ public class User extends BaseEntity implements UserDetails {
     @Column(name = "password")
     private String password;
 
+    @Transient
+    private String repeatPassword;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status")
     private Status status;
