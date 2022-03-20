@@ -29,21 +29,22 @@
                         <h4 class="text-right lang" key="profile-settings">Profile settings</h4>
                     </div>
                     <div class="row mt-2 text-center">
-                        <div class="col-md-6">
-                            <input type="text" th:value="*{username}" name="username" id="user" class="form-control">
-                            <label class="form-label lang" for="user" key="username">Username</label>
-                            <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{name}">
-                                username error</div>
+
+                        <div class="col-md-12">
+                            <input type="text" th:field="*{username}" name="username" id="username" class="form-control">
+                            <label class="form-label lang" for="username" key="username">username</label>
+                            <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
+                                first name error</div>
                         </div>
-                        <br>
-                        <div class="col-md-6">
-                            <input type="text" th:value="*{firstName}" name="firstName" id="first" class="form-control">
+
+                        <div class="col-md-12">
+                            <input type="text" th:field="*{firstName}" name="firstName" id="first" class="form-control">
                             <label class="form-label lang" for="first" key="first-name">First name</label>
                             <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">
                                 first name error</div>
                         </div>
-                        <div class="col-md-6">
-                            <input type="text" th:value="*{lastName}" name="lastName" id="last" class="form-control">
+                        <div class="col-md-12">
+                            <input type="text" th:field="*{lastName}" name="lastName" id="last" class="form-control">
                             <label class="form-label lang" for="last" key="last-name">Last name</label>
                             <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">
                                 last name error</div>
@@ -52,10 +53,10 @@
                     <div class="row mt-3 text-center">
                         <div class="col-md-12">
                             <input type="file" class="form-control" id="customFile" name="newAvatar" required/>
-                            <label class="form-label lang" for="customFile">input file</label>
+                            <label class="form-label lang" key="input" for="customFile">input file</label>
                         </div>
                         <div class="col-md-12">
-                            <input type="text" th:value="*{email}" name="email" id="email" class="form-control">
+                            <input type="text" th:field="*{email}" name="email" id="email" class="form-control">
                             <label class="form-label lang" for="email" key="email">Email</label>
                             <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
                                 email error</div>

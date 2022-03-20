@@ -1,12 +1,13 @@
 package com.bestSite.controllers;
 
-import com.bestSite.service.UserRegistration;
+import com.bestSite.model.User;
 import com.bestSite.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import javax.validation.Valid;
 
@@ -27,23 +28,21 @@ public class LoginController {
     }
 
     @GetMapping("/register")
-    public String registrationUserGet(Model model){
-        UserRegistration userRegistration = new UserRegistration();
-        model.addAttribute("user", userRegistration);
+    public String registrationUserGet(@ModelAttribute("user") User user){
         return "register";
     }
 
     @PostMapping("/register")
-    public String registrationUserPost(
-            @Valid UserRegistration userRegistration, BindingResult bindingResult){
+    public String registrationUserPost(@ModelAttribute("user") @Valid User newUser,
+                                       BindingResult bindingResult){
         if (bindingResult.hasErrors()){
             return "register";
         }
-        if (!userRegistration.getPassword().equals(userRegistration.getRepeatPassword())){
+        if (!newUser.getPassword().equals(newUser.getRepeatPassword())){
             bindingResult.rejectValue("password","", "passwords not equals");
             return "register";
         }
-        userService.register(userRegistration);
+        userService.register(newUser);
         return "redirect:/login";
     }
 }
