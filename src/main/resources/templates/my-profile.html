@@ -10,7 +10,7 @@
 <header th:insert="blocks/header :: header"></header>
 
 <div class="container rounded bg-white mt-5 mb-5">
-    <form th:action="@{/myProfile/{id}(id=${user.getId()})}" th:object="${user}" method="post"
+    <form th:action="@{/my-profile/{id}(id=${user.getId()})}" th:object="${user}" method="post"
           enctype="multipart/form-data">
         <div class="row">
             <div class="col-md-3 border-right">
@@ -32,15 +32,21 @@
                         <div class="col-md-6">
                             <input type="text" th:value="*{username}" name="username" id="user" class="form-control">
                             <label class="form-label lang" for="user" key="username">Username</label>
+                            <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{name}">
+                                username error</div>
                         </div>
                         <br>
                         <div class="col-md-6">
                             <input type="text" th:value="*{firstName}" name="firstName" id="first" class="form-control">
                             <label class="form-label lang" for="first" key="first-name">First name</label>
+                            <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">
+                                first name error</div>
                         </div>
                         <div class="col-md-6">
                             <input type="text" th:value="*{lastName}" name="lastName" id="last" class="form-control">
                             <label class="form-label lang" for="last" key="last-name">Last name</label>
+                            <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">
+                                last name error</div>
                         </div>
                     </div>
                     <div class="row mt-3 text-center">
@@ -51,6 +57,8 @@
                         <div class="col-md-12">
                             <input type="text" th:value="*{email}" name="email" id="email" class="form-control">
                             <label class="form-label lang" for="email" key="email">Email</label>
+                            <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
+                                email error</div>
                         </div>
 
                         <!-- Button -->

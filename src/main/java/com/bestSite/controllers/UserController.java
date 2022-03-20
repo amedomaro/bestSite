@@ -9,9 +9,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.Valid;
 import java.util.Optional;
 
 
@@ -29,7 +31,7 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @GetMapping("/myProfile")
+    @GetMapping("/my-profile")
     public String showMyProfile(Model model) {
         user = userRepository.findByUsername(userService.getCurrentUser().getName()).orElseThrow();
         userService.showProfile(model, user);
@@ -37,7 +39,7 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
-    @GetMapping("/myProfile/{id}")
+    @GetMapping("/my-profile/{id}")
     public String showUserProfile(@PathVariable(name = "id") long id, Model model) {
         user = userRepository.findById(id).orElseThrow();
         userService.showProfile(model, user);
@@ -45,11 +47,12 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN') or #user.getUsername().equals(authentication.name)")
-    @PostMapping("/myProfile/{id}")
-    public String editMyProfile(@PathVariable(name = "id") long id, @ModelAttribute("user") User user,
-                                @RequestParam Optional <MultipartFile> newAvatar) {
+    @PostMapping("/my-profile/{id}")
+    public String editMyProfile(@PathVariable(name = "id") long id, @ModelAttribute("user") @Valid User user,
+                                BindingResult bindingResult, @RequestParam Optional <MultipartFile> newAvatar) {
+        if(bindingResult.hasErrors()) return "my-profile";
         userService.userUpdate(id, user, newAvatar);
-        return "redirect:/myProfile";
+        return "redirect:/my-profile";
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")
