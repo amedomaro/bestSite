@@ -63,20 +63,7 @@ public class UserController {
         return "administration";
     }
 
-    @RequestMapping(value = "/target", method = RequestMethod.GET)
-    public String userTarget(HttpServletRequest request) {
-        String[] checkBox = request.getParameterValues("checkBoxUser");
-        String[] delete = request.getParameterValues("delete");
-        String[] block = request.getParameterValues("block");
-        String[] unlock = request.getParameterValues("unlock");
-        if (checkBox == null) return "redirect:/administration";
-        if (delete != null) userService.deleteUser(checkBox);
-        if (block != null) userService.blockUser(checkBox);
-        if (unlock != null) userService.unlockUser(checkBox);
-        return "redirect:/administration";
-    }
-
-
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/users/makeOrRemoveAdmin/{id}")
     public String makeOrRemoveAdmin(@PathVariable(value = "id") Long id) {
         user = userRepository.findById(id).orElseThrow();
@@ -89,6 +76,7 @@ public class UserController {
         return "redirect:/administration";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/users/blockUnblock/{id}")
     public String blockUnblock(@PathVariable(value = "id") Long id) {
         user = userRepository.findById(id).orElseThrow();
@@ -97,6 +85,7 @@ public class UserController {
         return "redirect:/administration";
     }
 
+    @PreAuthorize("hasAuthority('ADMIN')")
     @PostMapping("/users/delete/{id}")
     public String delete(@PathVariable(value = "id") Long id) {
         user = userRepository.findById(id).orElseThrow();
