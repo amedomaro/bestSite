@@ -10,13 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.util.Collections;
 import java.util.Optional;
 
@@ -24,18 +20,14 @@ import java.util.Optional;
 public class UserService {
 
     private User user;
-    private final HttpServletRequest httpServletRequest;
-    private final HttpServletResponse httpServletResponse;
     private final UserRepository userRepository;
     private final OverviewRepository overviewRepository;
     private final CloudService cloudService;
     private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserService(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse,
-                       UserRepository userRepository, OverviewRepository overviewRepository, CloudService cloudService, BCryptPasswordEncoder passwordEncoder) {
-        this.httpServletRequest = httpServletRequest;
-        this.httpServletResponse = httpServletResponse;
+    public UserService(UserRepository userRepository, OverviewRepository overviewRepository, CloudService cloudService,
+                       BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
         this.overviewRepository = overviewRepository;
         this.cloudService = cloudService;
@@ -47,13 +39,8 @@ public class UserService {
         return userFromDB.isEmpty();
     }
 
-    public void register(User newUser){
-        User user = new User();
-        user.setUsername(newUser.getUsername());
-        user.setFirstName(newUser.getFirstName());
-        user.setLastName(newUser.getLastName());
-        user.setEmail(newUser.getEmail());
-        user.setPassword(passwordEncoder.encode(newUser.getPassword()));
+    public void register(User user){
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(new Role(1L, "USER")));
         user.setStatus(Status.ACTIVE);
         if(checkUser(user)){
@@ -78,41 +65,9 @@ public class UserService {
         model.addAttribute("overviews", overviews);
         return model;
     }
+
     public Authentication getCurrentUser() {
         return SecurityContextHolder.getContext().getAuthentication();
-    }
-
-    public String deleteUser(String[] checkBox) {
-        for (String id : checkBox) {
-            user = userRepository.findById(Long.parseLong(id)).orElseThrow();
-            userRepository.delete(user);
-        }
-        return "redirect:/administration";
-    }
-
-    public String blockUser(String[] checkBox) {
-        boolean isFlag = false;
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        for (String id : checkBox) {
-            user = userRepository.findById(Long.parseLong(id)).orElseThrow();
-            user.setStatus(Status.BLOCKED);
-            userRepository.save(user);
-            if (user.getUsername().equals(auth.getName())) isFlag = true;
-        }
-        if (isFlag) {
-            new SecurityContextLogoutHandler().logout(httpServletRequest, httpServletResponse, auth);
-            return "redirect:/login";
-        }
-        return "redirect:/administration";
-    }
-
-    public String unlockUser(String[] checkBox) {
-        for (String id : checkBox) {
-            user = userRepository.findById(Long.parseLong(id)).orElseThrow();
-            user.setStatus(Status.ACTIVE);
-            userRepository.save(user);
-        }
-        return "redirect:/administration";
     }
 
 }
