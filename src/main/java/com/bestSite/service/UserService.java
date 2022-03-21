@@ -48,13 +48,15 @@ public class UserService {
     }
 
     public void userUpdate(long id, User updatedUser, Optional<MultipartFile> newAvatar) {
-        String avatar = cloudService.uploadFile(newAvatar.orElseThrow());
         user = userRepository.findById(id).orElseThrow();
         user.setFirstName(updatedUser.getFirstName());
         user.setLastName(updatedUser.getLastName());
         user.setEmail(updatedUser.getEmail());
-        if (user.getAvatar() != null) cloudService.deleteFile(user.getAvatar());
-        user.setAvatar(avatar);
+        if (cloudService.fileIsPresent(newAvatar.orElseThrow())){
+            String avatar = cloudService.uploadFile(newAvatar.orElseThrow());
+            if (user.getAvatar() != null) cloudService.deleteFile(user.getAvatar());
+            user.setAvatar(avatar);
+        }
         userRepository.save(user);
     }
 
