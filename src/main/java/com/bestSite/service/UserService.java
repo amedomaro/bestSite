@@ -13,6 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.multipart.MultipartFile;
+
 import java.util.Collections;
 import java.util.Optional;
 
@@ -34,27 +35,25 @@ public class UserService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public boolean checkUser(User user) {
-        Optional<User> userFromDB = userRepository.findByUsername(user.getUsername());
-        return userFromDB.isEmpty();
+    public boolean checkUser(String username) {
+        return userRepository.findByUsername(username).isPresent();
     }
 
-    public void register(User user){
+    public void register(User user) {
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         user.setRoles(Collections.singleton(new Role(1L, "USER")));
         user.setStatus(Status.ACTIVE);
-        if(checkUser(user)){
-            userRepository.save(user);
-        }
+        userRepository.save(user);
+
     }
 
-    public void userUpdate(long id, User updatedUser, Optional <MultipartFile> newAvatar){
+    public void userUpdate(long id, User updatedUser, Optional<MultipartFile> newAvatar) {
         String avatar = cloudService.uploadFile(newAvatar.orElseThrow());
         user = userRepository.findById(id).orElseThrow();
         user.setFirstName(updatedUser.getFirstName());
         user.setLastName(updatedUser.getLastName());
         user.setEmail(updatedUser.getEmail());
-        if(user.getAvatar() != null) cloudService.deleteFile(user.getAvatar());
+        if (user.getAvatar() != null) cloudService.deleteFile(user.getAvatar());
         user.setAvatar(avatar);
         userRepository.save(user);
     }
