@@ -38,7 +38,11 @@ public class LoginController {
         if (bindingResult.hasErrors()){
             return "register";
         }
-        if (!newUser.getPassword().equals(newUser.getRepeatPassword())){
+        if (userService.checkUser(newUser.getUsername())){
+            bindingResult.rejectValue("username","","this username already exists");
+            return "register";
+        }
+        if (newUser.getPassword().isEmpty() || !newUser.getPassword().equals(newUser.getRepeatPassword())){
             bindingResult.rejectValue("password","", "passwords not equals");
             return "register";
         }
