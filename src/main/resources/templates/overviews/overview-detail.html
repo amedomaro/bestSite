@@ -25,31 +25,20 @@
                 <div>
                     <p class="text-muted" th:text="${el.text}"></p><br><br>
                 </div>
-                <!--Table-->
-                <table class="table table-bordered">
-                    <tbody>
-                    <div>
-                        <tr>
-                            <td><b>характеристики</b></td>
-                            <td>описание</td>
-                        </tr>
-                    </div>
-                    <tbody>
-                </table>
+                <hr>
                 <!--Button-->
                 <div class="row align-items-center" sec:authorize="hasAuthority('ADMIN')">
-
                     <div class="col-md-6">
                         <a class="lang" key="edit" th:href="'/overview/' + ${el.id} + '/edit'">Edit</a>
                     </div>
 
                     <div class="col-md-6">
-                        <form sec:authorize="hasAuthority('ADMIN')" class="form-inline my-2 my-lg-0"
+                        <form class="form-inline my-2 my-lg-0"
                               th:action="'/overview/' + ${el.id} + '/delete'" method="post">
                             <button type="submit" class="btn btn-secondary lang" key="delete">Delete</button>
-                        </form>
+                        </form><br>
                     </div>
-
+                    <hr><br>
                 </div>
             </div>
         </section>
