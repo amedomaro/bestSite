@@ -31,35 +31,36 @@
                     <div class="row mt-2 text-center">
 
                         <div class="col-md-12">
-                            <input type="text" th:field="*{username}" name="username" id="username" class="form-control">
+                            <input type="text" th:field="*{username}" name="username" id="username"
+                                   class="form-control">
                             <label class="form-label lang" for="username" key="username">username</label>
-                            <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">
-                                first name error</div>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('username')}"
+                                   th:errors="*{username}">error</small>
                         </div>
 
                         <div class="col-md-12">
                             <input type="text" th:field="*{firstName}" name="firstName" id="first" class="form-control">
                             <label class="form-label lang" for="first" key="first-name">First name</label>
-                            <div style="color:red" th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}">
-                                first name error</div>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('firstName')}"
+                                   th:errors="*{firstName}">error</small>
                         </div>
                         <div class="col-md-12">
                             <input type="text" th:field="*{lastName}" name="lastName" id="last" class="form-control">
                             <label class="form-label lang" for="last" key="last-name">Last name</label>
-                            <div style="color:red" th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}">
-                                last name error</div>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('lastName')}"
+                                   th:errors="*{lastName}">error</small>
                         </div>
                     </div>
                     <div class="row mt-3 text-center">
                         <div class="col-md-12">
-                            <input type="file" class="form-control" id="customFile" name="newAvatar" required/>
+                            <input type="file" class="form-control" id="customFile" name="newAvatar"/>
                             <label class="form-label lang" key="input" for="customFile">input file</label>
                         </div>
                         <div class="col-md-12">
                             <input type="text" th:field="*{email}" name="email" id="email" class="form-control">
                             <label class="form-label lang" for="email" key="email">Email</label>
-                            <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">
-                                email error</div>
+                            <small class="form-text text-danger" th:if="${#fields.hasErrors('email')}"
+                                   th:errors="*{email}">error</small>
                         </div>
 
                         <!-- Button -->
@@ -95,12 +96,10 @@
                                                        th:href="'/overview/' + ${el.id} + '/edit'"
                                                        role="button">Edit</a>
 
-                                                    <form class="form-inline my-2 my-lg-0"
-                                                          th:action="'/overview/' + ${el.id} + '/delete'" method="post">
-                                                        <button class="btn btn-outline-dark mt-1 lang" key="delete"
-                                                                type="submit">Delete</button>
-                                                    </form>
-
+                                                    <button class="btn btn-outline-dark mt-1 lang" key="delete"
+                                                            th:formaction="'/overview/' + ${el.id} + '/delete'"
+                                                            type="submit">Delete
+                                                    </button>
                                                 </div>
                                             </div>
                                         </td>
