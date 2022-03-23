@@ -28,11 +28,12 @@
                 <hr>
                 <!--Button-->
                 <div class="row align-items-center" sec:authorize="hasAuthority('ADMIN')">
-                    <div class="col-md-6">
+                    <p class="lang" key="admin" style="color:red">Administration</p><br>
+                    <div class="col-md-5" style="margin-bottom: 30px">
                         <a class="lang" key="edit" th:href="'/overview/' + ${el.id} + '/edit'">Edit</a>
                     </div>
 
-                    <div class="col-md-6">
+                    <div class="col-md-5" style="margin-left: 100px">
                         <form class="form-inline my-2 my-lg-0"
                               th:action="'/overview/' + ${el.id} + '/delete'" method="post">
                             <button type="submit" class="btn btn-secondary lang" key="delete">Delete</button>
