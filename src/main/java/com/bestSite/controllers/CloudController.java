@@ -1,9 +1,7 @@
 package com.bestSite.controllers;
 
-
 import com.bestSite.service.CloudService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
