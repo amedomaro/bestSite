@@ -1,6 +1,7 @@
 package com.bestSite.controllers;
 
 import com.bestSite.model.User;
+import com.bestSite.service.LoginService;
 import com.bestSite.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -14,11 +15,11 @@ import javax.validation.Valid;
 @Controller
 public class LoginController {
 
-    private final UserService userService;
+    private final LoginService loginService;
 
     @Autowired
-    public LoginController(UserService userService) {
-        this.userService = userService;
+    public LoginController(LoginService loginService) {
+        this.loginService = loginService;
     }
 
     @GetMapping("/login")
@@ -35,18 +36,6 @@ public class LoginController {
     @PostMapping("/register")
     public String registrationUserPost(@ModelAttribute("user") @Valid User newUser,
                                        BindingResult bindingResult){
-        if (bindingResult.hasErrors()){
-            return "register";
-        }
-        if (userService.checkUser(newUser.getUsername())){
-            bindingResult.rejectValue("username","","this username already exists");
-            return "register";
-        }
-        if (newUser.getPassword().isEmpty() || !newUser.getPassword().equals(newUser.getRepeatPassword())){
-            bindingResult.rejectValue("password","", "passwords not equals");
-            return "register";
-        }
-        userService.register(newUser);
-        return "redirect:/login";
+        return loginService.registrationUser(newUser, bindingResult);
     }
 }

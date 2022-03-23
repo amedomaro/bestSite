@@ -52,24 +52,25 @@ public class OverviewService {
     }
 
     public void deleteOverview(long id){
-        Overview overview = overviewRepository.findById(id).orElseThrow();
+        overview = overviewRepository.findById(id).orElseThrow();
         if(overview.getImage() != null) cloudService.deleteFile(overview.getImage());
         overviewRepository.delete(overview);
     }
 
     public void editOverview(long id, Overview updatedOverview, Optional<MultipartFile> newImage){
         overview = overviewRepository.findById(id).orElseThrow();
-        String image = cloudService.uploadFile(newImage.orElseThrow());
-        //if(overview.getImage() != null) cloudService.deleteFile(overview.getImage());
-        overview.setImage(image);
         overview.setTitle(updatedOverview.getTitle());
         overview.setDescription(updatedOverview.getDescription());
         overview.setText(updatedOverview.getText());
+        if (cloudService.fileIsPresent(newImage.orElseThrow())){
+            String image = cloudService.uploadFile(newImage.orElseThrow());
+            overview.setImage(image);
+        }
         overviewRepository.save(overview);
     }
 
     public void saveComment(long id, String text) {
-        Overview overview = overviewRepository.findById(id).orElseThrow();
+        overview = overviewRepository.findById(id).orElseThrow();
         User user = userRepository.findByUsername(userService.getCurrentUser().getName()).orElseThrow();
         Comment comment = new Comment(text, overview, user);
         commentRepository.save(comment);
