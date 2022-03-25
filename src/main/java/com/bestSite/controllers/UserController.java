@@ -40,10 +40,10 @@ public class UserController {
     }
 
     @PreAuthorize("hasAuthority('ADMIN') or #user.getUsername().equals(authentication.name)")
-    @PostMapping("/my-profile/{id}")
-    public String editMyProfile(@PathVariable(name = "id") long id, @ModelAttribute("user") @Valid User user,
+    @PostMapping("/my-profile/{user}")
+    public String editMyProfile(@PathVariable User user, @Valid User newUser,
                                 BindingResult bindingResult, @RequestParam Optional <MultipartFile> newAvatar) {
-        return userService.userUpdate(id, user, bindingResult, newAvatar);
+        return userService.userUpdate(user, bindingResult, newAvatar);
     }
 
     @PreAuthorize("hasAuthority('ADMIN')")

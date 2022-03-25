@@ -55,12 +55,8 @@ public class UserService {
         return model;
     }
 
-    public String userUpdate(long id, User updatedUser, BindingResult bindingResult, Optional<MultipartFile> newAvatar) {
+    public String userUpdate(User user, BindingResult bindingResult, Optional<MultipartFile> newAvatar) {
         if (bindingResult.hasErrors()) return "my-profile";
-        user = userRepository.findById(id).orElseThrow();
-        user.setFirstName(updatedUser.getFirstName());
-        user.setLastName(updatedUser.getLastName());
-        user.setEmail(updatedUser.getEmail());
         if (cloudService.fileIsPresent(newAvatar.orElseThrow())) {
             String avatar = cloudService.uploadFile(newAvatar.orElseThrow());
             if (user.getAvatar() != null) cloudService.deleteFile(user.getAvatar());
