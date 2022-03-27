@@ -9,19 +9,19 @@
             <div class="collapse navbar-collapse" id="navbarCollapse">
                 <ul class="navbar-nav me-auto mb-2 mb-md-0">
                     <li class="nav-item">
-                        <a class="nav-link active lang" key="home" aria-current="page" href="/">Home page</a>
+                        <a class="nav-link active" aria-current="page" href="/" th:text="#{home}">Home page</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link lang" key="overview" href="/overview">Overview</a>
+                        <a class="nav-link" href="/overview" th:text="#{overview}">Overview</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link lang" key="add-review" href="/overview/add">Add review</a>
+                        <a class="nav-link" href="/overview/add" th:text="#{add-review}">Add review</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link lang" key="profile" href="/my-profile">My profile</a>
+                        <a class="nav-link" href="/my-profile " th:text="#{profile}">My profile</a>
                     </li>
                     <li sec:authorize="hasAuthority('ADMIN')" class="nav-item">
-                        <a class="nav-link active lang" key="admin" aria-current="page" href="/administration">Administration</a>
+                        <a class="nav-link active" aria-current="page" href="/administration" th:text="#{admin}">Administration</a>
                     </li>
                 </ul>
 
@@ -32,22 +32,24 @@
                 </div>
                 <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
                     <div class="btn-group mr-2" role="group" aria-label="First group" >
-                        <li class="header-lang-ru" style="margin-right: 6px">
-                            <button id="ru" class="translate btn-dark">RU</button>
-                        </li>
+
+                        <form class="nav-item" style="margin-right: 6px">
+                            <a th:href="@{?lang=ru}" class="btn-dark" th:text="#{ru}"></a>
+                        </form>
                     </div>
                     <div class="btn-group mr-2 " role="group" aria-label="Second group" >
-                        <li class="header-lang-en" style="margin-right: 25px">
-                            <button id="en" class="translate btn-dark">EN</button>
-                        </li>
+
+                        <form class="nav-item" style="margin-right: 25px">
+                            <a th:href="@{?lang=en}" class="btn-dark" th:text="#{en}"></a>
+                        </form>
                     </div>
                 </div>
                 <form sec:authorize="hasAuthority('ADMIN') or hasAuthority('USER')"
                       class="form-inline" th:action="@{/logout}" method="post">
-                    <button class="btn btn-outline-success lang" key="logout">Exit</button>
+                    <button class="btn btn-outline-success" th:text="#{logout}">Exit</button>
                 </form>
                 <form sec:authorize="isAnonymous()" class="form-inline" th:action="@{/login}" method="get">
-                    <button class="btn btn-outline-success lang" key="login">Login</button>
+                    <button class="btn btn-outline-success" th:text="#{login}">Login</button>
                 </form>
             </div>
         </div>

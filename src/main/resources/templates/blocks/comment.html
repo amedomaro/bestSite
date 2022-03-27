@@ -4,7 +4,7 @@
             <div class="row d-flex justify-content-center">
                 <div class="col-md-12 col-lg-10 col-xl-8">
                     <div class="card">
-                        <div class="card-body" th:each="el:${comments}"> <!--th:each="el:${comments}"-->
+                        <div class="card-body" th:each="el:${comments}">
                             <!-- Avatar -->
                             <div class="d-flex flex-start align-items-center">
                                 <img
@@ -27,7 +27,7 @@
                                 <div class="d-flex flex-start w-100">
                                     <!-- new message -->
                                     <div class="form-outline w-100 text-center" >
-                                        <label class="form-label lang" key="new-comment" for="textAreaExample">
+                                        <label class="form-label" for="textAreaExample" th:text="#{new-comment}">
                                             <b>New comment</b></label>
                                         <textarea class="form-control" id="textAreaExample" name="textComment" rows="4"
                                                   placeholder="Enter a new message" style="background: #fff;"></textarea>
@@ -35,7 +35,7 @@
                                 </div>
                                 <!-- Button -->
                                 <div class="float-end mt-2 pt-1">
-                                    <button type="submit" class="btn btn-secondary btn-sm lang" key="post-comment">
+                                    <button type="submit" class="btn btn-secondary btn-sm" th:text="#{post-comment}">
                                         Post comment</button>
                                 </div>
                             </div>
