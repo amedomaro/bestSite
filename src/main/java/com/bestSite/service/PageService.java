@@ -38,7 +38,7 @@ public class PageService implements PageInterface {
         page.setText2(updatedPage.getText2());
         if (cloudService.fileIsPresent(newImage.orElseThrow())){
             String image = cloudService.uploadFile(newImage.orElseThrow());
-            if (page.getImage() != null) cloudService.deleteFile(page.getImage());
+//            if (page.getImage() != null) cloudService.deleteFile(page.getImage());
             page.setImage(image);
         }
         pageRepository.save(page);
