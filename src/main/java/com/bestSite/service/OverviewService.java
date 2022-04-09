@@ -64,6 +64,7 @@ public class OverviewService {
         overview.setText(updatedOverview.getText());
         if (cloudService.fileIsPresent(newImage.orElseThrow())){
             String image = cloudService.uploadFile(newImage.orElseThrow());
+            if (overview.getImage() != null) cloudService.deleteFile(overview.getImage());
             overview.setImage(image);
         }
         overviewRepository.save(overview);

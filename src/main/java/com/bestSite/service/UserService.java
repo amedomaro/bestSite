@@ -59,7 +59,7 @@ public class UserService {
         if (bindingResult.hasErrors()) return "my-profile";
         if (cloudService.fileIsPresent(newAvatar.orElseThrow())) {
             String avatar = cloudService.uploadFile(newAvatar.orElseThrow());
-//            if (user.getAvatar() != null) cloudService.deleteFile(user.getAvatar());
+            if (user.getAvatar() != null) cloudService.deleteFile(user.getAvatar());
             user.setAvatar(avatar);
         }
         userRepository.save(user);
